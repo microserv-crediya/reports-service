@@ -20,7 +20,7 @@ aws:
     endpoint: https://dynamodb.us-east-1.amazonaws.com #  DynamoDB local, o en la nube
     enabled: true
 
-# Configuración específica del cliente DynamoDB
+# Configuración específica de cliente DynamoDB
 cloud:
   aws:
     region:
