@@ -11,11 +11,33 @@ spring:
       path: "/h2"
   profiles:
     include: null
-    active: dev
-adapter:
-  sqs:
-    region: "us-east-1"
+    active: local
 aws:
+  credentials:
+    profile: default
   region: us-east-1
-#  dynamodb:
-#    endpoint: "http://localhost:8000"
+  dynamodb:
+    endpoint: https://dynamodb.us-east-1.amazonaws.com #  DynamoDB local, o en la nube
+    enabled: true
+
+# Configuración específica del cliente DynamoDB
+cloud:
+  aws:
+    region:
+      static: us-east-1
+    credentials:
+      profile: default
+    stack:
+      auto: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
