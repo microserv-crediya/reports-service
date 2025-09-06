@@ -8,14 +8,14 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 public class ApprovedCountEntity {
 
     private String id;
-    private String atr1;
+    private String count;
 
     public ApprovedCountEntity() {
     }
 
-    public ApprovedCountEntity(String id, String atr1) {
+    public ApprovedCountEntity(String id, String count) {
         this.id = id;
-        this.atr1 = atr1;
+        this.count = count;
     }
 
     @DynamoDbPartitionKey
@@ -29,11 +29,11 @@ public class ApprovedCountEntity {
     }
 
     @DynamoDbAttribute("count")
-    public String getAtr1() {
-        return atr1;
+    public String getCount() {
+        return count;
     }
 
-    public void setAtr1(String atr1) {
-        this.atr1 = atr1;
+    public void setCount(String count) {
+        this.count = count;
     }
 }
