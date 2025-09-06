@@ -41,12 +41,12 @@ class TemplateAdapterOperationsTest {
 
         approvedCountEntity = new ApprovedCountEntity();
         approvedCountEntity.setId("id");
-        approvedCountEntity.setCount("count");
+        approvedCountEntity.setCount(0L);
     }
 
     @Test
     void modelEntityPropertiesMustNotBeNull() {
-        ApprovedCountEntity approvedCountEntityUnderTest = new ApprovedCountEntity("id", "count");
+        ApprovedCountEntity approvedCountEntityUnderTest = new ApprovedCountEntity("id", 1L);
 
         assertNotNull(approvedCountEntityUnderTest.getId());
         assertNotNull(approvedCountEntityUnderTest.getCount());

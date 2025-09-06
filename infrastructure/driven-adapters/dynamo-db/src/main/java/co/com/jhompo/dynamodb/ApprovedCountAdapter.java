@@ -31,15 +31,6 @@ public class ApprovedCountAdapter
         super(connectionFactory, mapper, d ->  mapper.map(d, ApprovedCount.class), TABLE_NAME);
     }
 
-    public Mono<List<ApprovedCount>> getEntityBySomeKeys(String partitionKey, String sortKey) {
-        QueryEnhancedRequest queryExpression = generateQueryExpression(partitionKey, sortKey);
-        return query(queryExpression);
-    }
-
-    public Mono<List<ApprovedCount>> getEntityBySomeKeysByIndex(String partitionKey, String sortKey) {
-        QueryEnhancedRequest queryExpression = generateQueryExpression(partitionKey, sortKey);
-        return queryByIndex(queryExpression, "secondary_index" /*index is optional if you define in constructor*/);
-    }
 
     private QueryEnhancedRequest generateQueryExpression(String partitionKey, String sortKey) {
         return QueryEnhancedRequest.builder()
