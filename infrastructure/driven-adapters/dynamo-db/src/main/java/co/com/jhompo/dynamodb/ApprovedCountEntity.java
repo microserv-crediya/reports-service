@@ -8,12 +8,12 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 public class ApprovedCountEntity {
 
     private String id;
-    private String count;
+    private Long  count;
 
     public ApprovedCountEntity() {
     }
 
-    public ApprovedCountEntity(String id, String count) {
+    public ApprovedCountEntity(String id, Long  count) {
         this.id = id;
         this.count = count;
     }
@@ -29,11 +29,11 @@ public class ApprovedCountEntity {
     }
 
     @DynamoDbAttribute("count")
-    public String getCount() {
+    public Long  getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(Long  count) {
         this.count = count;
     }
 }

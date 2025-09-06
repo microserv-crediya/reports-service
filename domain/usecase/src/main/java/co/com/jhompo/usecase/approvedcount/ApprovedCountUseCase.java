@@ -9,7 +9,11 @@ import reactor.core.publisher.Mono;
 public class ApprovedCountUseCase {
     private final ApprovedCountRepository approvedCountRepository;
 
-    public Mono<ApprovedCount> execute() {
+    public Mono<ApprovedCount> get() {
+        return approvedCountRepository.getCount();
+    }
+
+    public Mono<ApprovedCount> increment() {
         return approvedCountRepository.incrementCount();
     }
 }
