@@ -16,7 +16,7 @@ aws:
     profile: default
   region: ${AWS_REGION:us-east-1}
   dynamodb:
-    endpoint: ${AWS_DYNAMODB:http://localhost:4566} #apunta no al puerto de DYNAMODB(8001) sino el de localstack - https://dynamodb.us-east-1.amazonaws.com
+    endpoint: ${AWS_DYNAMODB:https://dynamodb.us-east-1.amazonaws.com} #apunta no al puerto de DYNAMODB(8001) sino el de localstack - http://localhost:4566
     enabled: true
 
 cloud:
@@ -38,8 +38,8 @@ cloud:
 # Configuración adicional de logging para debugging
 logging:
   level:
-    io.awspring.cloud.sqs: DEBUG
-    co.com.jhompo.sqs: DEBUG
+    #io.awspring.cloud.sqs: DEBUG
+    #co.com.jhompo.sqs: DEBUG
     software.amazon.awssdk.services.sqs: DEBUG
 
 management:
