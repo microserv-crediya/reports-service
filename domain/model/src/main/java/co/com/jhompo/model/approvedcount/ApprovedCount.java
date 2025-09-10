@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,4 +15,5 @@ import lombok.Setter;
 public class ApprovedCount {
     private String id; // Usaremos un ID fijo, como "reports-counter"
     private Long count;
+    private BigDecimal totalAmount;
 }

@@ -5,6 +5,8 @@ import co.com.jhompo.model.approvedcount.gateways.ApprovedCountRepository;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
+import java.math.BigDecimal;
+
 @RequiredArgsConstructor
 public class ApprovedCountUseCase {
     private final ApprovedCountRepository approvedCountRepository;
@@ -13,7 +15,7 @@ public class ApprovedCountUseCase {
         return approvedCountRepository.getCount();
     }
 
-    public Mono<ApprovedCount> increment() {
-        return approvedCountRepository.incrementCount();
+    public Mono<ApprovedCount> update(BigDecimal amount) {
+        return approvedCountRepository.updateReport(amount);
     }
 }
