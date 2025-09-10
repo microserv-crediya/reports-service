@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: ${PORT:8083}
 spring:
   application:
     name: "reports-service"
@@ -10,25 +10,37 @@ spring:
       enabled: true
       path: "/h2"
   profiles:
-    include: null
     active: local
 aws:
   credentials:
     profile: default
-  region: us-east-1
+  region: ${AWS_REGION:us-east-1}
   dynamodb:
-    endpoint: https://dynamodb.us-east-1.amazonaws.com #  DynamoDB local, o en la nube
+    endpoint: ${AWS_DYNAMODB:http://localhost:4566} #apunta no al puerto de DYNAMODB(8001) sino el de localstack - https://dynamodb.us-east-1.amazonaws.com
     enabled: true
 
-# Configuración específica de cliente DynamoDB
 cloud:
   aws:
     region:
-      static: us-east-1
+      static: us-east-1  # Especifica la región donde está tu cola SQS
     credentials:
       profile: default
-    stack:
-      auto: false
+    sqs:
+      enabled: true
+      endpoint: https://sqs.us-east-1.amazonaws.com  # Endpoint de SQS
+      listener:
+        max-concurrent-messages: 10  # Máximo de mensajes concurrentes
+        max-messages-per-poll: 10    # Mensajes por polling
+        poll-timeout: 20             # Timeout del polling en segundos
+        visibility-timeout: 30       # Timeout de visibilidad en segundos
+        wait-time-out: 20           # Long polling timeout
+
+# Configuración adicional de logging para debugging
+logging:
+  level:
+    io.awspring.cloud.sqs: DEBUG
+    co.com.jhompo.sqs: DEBUG
+    software.amazon.awssdk.services.sqs: DEBUG
 
 management:
   endpoints:
