@@ -14,6 +14,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedException;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 
@@ -39,46 +40,22 @@ public class ApprovedCountAdapter
                 .build();
     }
 
+
     @Override
     public Mono<ApprovedCount> getCount() {
         return this.getById(COUNTER_ID)
-                .switchIfEmpty(initializeCounter())
+                .switchIfEmpty(Mono.defer(this::initializeCounter)) // solo crea 1 vez
                 .doOnNext(count -> log.debug("Current count: {}", count.getCount()));
-    }
-
-    @Override
-    public Mono<ApprovedCount> incrementCount() {
-        return this.getCount()
-                .flatMap(currentCount -> {
-                    ApprovedCount newCount = ApprovedCount.builder()
-                            .id(COUNTER_ID)
-                            .count(currentCount.getCount() + 1)
-                            .build();
-
-                    return this.save(newCount);
-                })
-                .retryWhen(Retry.backoff(3, Duration.ofMillis(100))
-                        .filter(throwable -> throwable instanceof ConditionalCheckFailedException))
-                .doOnSuccess(updated -> log.info("Counter incremented to: {}", updated.getCount()))
-                .doOnError(error -> log.error("Error incrementing counter", error));
-    }
-
-
-
-    public Mono<ApprovedCount> incrementCount2() {
-        return this.getCount()
-                .flatMap(currentCount -> {
-                    ApprovedCount newCount = new ApprovedCount(COUNTER_ID, currentCount.getCount() + 1);
-                    return this.save(newCount);
-                });
     }
 
     private Mono<ApprovedCount> initializeCounter() {
         ApprovedCount initialCount = ApprovedCount.builder()
                 .id(COUNTER_ID)
                 .count(0L)
+                .totalAmount(BigDecimal.ZERO)
                 .build();
 
+        log.info("Initializing counter for the first time: {}", initialCount);
         return this.save(initialCount)
                 .doOnSuccess(saved -> log.info("Counter initialized with value: 0"))
                 .onErrorResume(error -> {
@@ -86,4 +63,33 @@ public class ApprovedCountAdapter
                     return this.getById(COUNTER_ID);
                 });
     }
+
+    @Override
+    public Mono<ApprovedCount> updateReport(BigDecimal amount) {
+        return this.getCount()
+                .flatMap(currentCount -> {
+                    BigDecimal currentTotal = currentCount.getTotalAmount() != null
+                            ? currentCount.getTotalAmount()
+                            : BigDecimal.ZERO;
+
+                    BigDecimal newAmount = amount != null ? amount : BigDecimal.ZERO;
+
+                    ApprovedCount newCount = ApprovedCount.builder()
+                            .id(COUNTER_ID)
+                            .count(currentCount.getCount() + 1)
+                            .totalAmount(currentTotal.add(newAmount))
+                            .build();
+
+                    return this.save(newCount);
+                })
+                .retryWhen(Retry.backoff(3, Duration.ofMillis(100))
+                        .filter(throwable -> throwable instanceof ConditionalCheckFailedException))
+                .doOnSuccess(updated ->
+                        log.info("Counter incremented to: {}, totalAmount: {}",  updated.getCount(), updated.getTotalAmount()))
+                .doOnError(error -> log.error("Error incrementing counter", error));
+    }
+
+
+
+
 }
