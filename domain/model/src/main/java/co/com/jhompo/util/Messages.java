@@ -244,38 +244,26 @@ public final class Messages {
         private SYSTEM() {}
     }
 
-    // ============================================
-    // MENSAJES DE SOLICITUDES
-    // ============================================
-    public static final class REQUEST {
-        // Éxito
-        public static final String CREATED_SUCCESS = "Solicitud creada exitosamente";
-        public static final String UPDATED_SUCCESS = "Solicitud actualizada exitosamente";
-        public static final String PROCESSED_SUCCESS = "Solicitud procesada exitosamente";
-        public static final String APPROVED_SUCCESS = "Solicitud aprobada exitosamente";
-        public static final String REJECTED_SUCCESS = "Solicitud rechazada exitosamente";
-        public static final String CANCELLED_SUCCESS = "Solicitud cancelada exitosamente";
 
-        // Errores
-        public static final String NOT_FOUND = "Solicitud no encontrada";
-        public static final String ALREADY_PROCESSED = "La solicitud ya fue procesada";
-        public static final String INVALID_STATUS = "Estado de solicitud inválido";
-        public static final String CREATION_FAILED = "Error al crear la solicitud";
-        public static final String UPDATE_FAILED = "Error al actualizar la solicitud";
-        public static final String PROCESSING_FAILED = "Error al procesar la solicitud";
-
-        // Validaciones
-        public static final String TYPE_REQUIRED = "El tipo de solicitud es requerido";
-        public static final String DESCRIPTION_REQUIRED = "La descripción es requerida";
-        public static final String INVALID_REQUEST_TYPE = "Tipo de solicitud inválido";
-
-        private REQUEST() {}
-    }
 
     // ============================================
     // MENSAJES HTTP/API
     // ============================================
     public static final class HTTP {
+
+        // Swagger / OpenAPI
+        public static final String APPROVED_SUMMARY = "Obtener cantidad y monto total de solicitudes aprobadas";
+        public static final String APPROVED_DESCRIPTION = "Este endpoint retorna la cantidad de solicitudes de crédito aprobadas y el monto total aprobado.";
+        public static final String RESPONSE_OK_DESCRIPTION = "Información de solicitudes aprobadas";
+        public static final String RESPONSE_ERROR_DESCRIPTION = "Error interno del servidor";
+        public static final String MEDIA_TYPE_JSON = "application/json";
+        // Logging
+        public static final String SQS_PROCESS = "Procesando mensaje de SQS: {}";
+        public static final String REPORT_PROCESS = "Procesando operacion para obtener Reporte";
+        public static final String ERROR_PARSE_JSON = "Error al parsear el mensaje JSON de SQS: {}";
+        public static final String ERROR_MESSAGE_BODY = "Contenido del mensaje que falló: {}";
+        public static final String ERROR_UNEXPECTED = "Error inesperado procesando mensaje SQS: {}";
+
         public static final String BAD_REQUEST = "Solicitud incorrecta";
         public static final String UNAUTHORIZED = "No autorizado";
         public static final String FORBIDDEN = "Prohibido";
