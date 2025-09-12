@@ -72,11 +72,11 @@ public abstract class TemplateAdapterOperations<E, K, V> {
      * functions, and if necessary, consider the Single-Table Design pattern for DynamoDB.
      * @deprecated
      */
-    @Deprecated(forRemoval = true)
+    /* @Deprecated(forRemoval = true)
     public Mono<List<E>> scan() {
         PagePublisher<V> pagePublisher = table.scan();
         return listOfModel(pagePublisher);
-    }
+    } */
 
     private Mono<List<E>> listOfModel(PagePublisher<V> pagePublisher) {
         return Mono.from(pagePublisher).map(page -> page.items().stream().map(this::toModel).toList());
