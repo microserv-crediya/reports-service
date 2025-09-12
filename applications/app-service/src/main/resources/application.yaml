@@ -27,7 +27,7 @@ cloud:
       profile: default
     sqs:
       enabled: true
-      endpoint: https://sqs.us-east-1.amazonaws.com  # Endpoint de SQS
+      endpoint: ${AWS_SQS:https://sqs.us-east-1.amazonaws.com}  # Endpoint de SQS
       listener:
         max-concurrent-messages: 10  # Máximo de mensajes concurrentes
         max-messages-per-poll: 10    # Mensajes por polling

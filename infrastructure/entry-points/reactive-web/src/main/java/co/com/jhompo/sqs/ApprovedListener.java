@@ -1,6 +1,6 @@
 package co.com.jhompo.sqs;
 
-import co.com.jhompo.usecase.approvedcount.ApprovedCountUseCase;
+import co.com.jhompo.usecase.approved.ApprovedUseCase;
 import co.com.jhompo.util.Messages.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,13 +13,13 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class ReportListener {
+public class ApprovedListener {
 
-    private final ApprovedCountUseCase approvedCountUseCase;
+    private final ApprovedUseCase approvedUseCase;
     private final ObjectMapper objectMapper;
 
-    public ReportListener(ApprovedCountUseCase approvedCountUseCase, ObjectMapper objectMapper) {
-        this.approvedCountUseCase = approvedCountUseCase;
+    public ApprovedListener(ApprovedUseCase approvedUseCase, ObjectMapper objectMapper) {
+        this.approvedUseCase = approvedUseCase;
         this.objectMapper = objectMapper;
     }
 
@@ -43,7 +43,7 @@ public class ReportListener {
                     if (amount.compareTo(BigDecimal.ZERO) > 0) {
                         log.info(SYSTEM.APPROVED_AMOUNT_DETECTED, amount, loanId);
 
-                        approvedCountUseCase.update(amount)
+                        approvedUseCase.update(amount)
                                 .doOnSuccess(count -> log.info(SYSTEM.COUNTER_INCREMENTED, count.getCount()))
                                 .doOnError(error -> log.error(SYSTEM.COUNTER_ERROR, error.getMessage()))
                                 .subscribe();

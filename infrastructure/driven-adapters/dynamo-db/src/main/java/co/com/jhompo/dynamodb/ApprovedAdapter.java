@@ -1,8 +1,8 @@
 package co.com.jhompo.dynamodb;
 
 import co.com.jhompo.dynamodb.helper.TemplateAdapterOperations;
-import co.com.jhompo.model.approvedcount.ApprovedCount;
-import co.com.jhompo.model.approvedcount.gateways.ApprovedCountRepository;
+import co.com.jhompo.model.approved.Approved;
+import co.com.jhompo.model.approved.gateways.ApprovedRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
@@ -16,40 +16,31 @@ import software.amazon.awssdk.services.dynamodb.model.ConditionalCheckFailedExce
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.List;
 
 @Slf4j
 @Repository
-public class ApprovedCountAdapter
-        extends TemplateAdapterOperations<ApprovedCount, String, ApprovedCountEntity>
-        implements ApprovedCountRepository {
+public class ApprovedAdapter
+        extends TemplateAdapterOperations<Approved, String, ApprovedEntity>
+        implements ApprovedRepository {
 
     private static final String TABLE_NAME = "approved_counts";
     private static final String COUNTER_ID = "reports-counter";
 
-    public ApprovedCountAdapter(DynamoDbEnhancedAsyncClient connectionFactory, ObjectMapper mapper) {
+    public ApprovedAdapter(DynamoDbEnhancedAsyncClient connectionFactory, ObjectMapper mapper) {
 
-        super(connectionFactory, mapper, d ->  mapper.map(d, ApprovedCount.class), TABLE_NAME);
-    }
-
-
-    private QueryEnhancedRequest generateQueryExpression(String partitionKey, String sortKey) {
-        return QueryEnhancedRequest.builder()
-                .queryConditional(QueryConditional.keyEqualTo(Key.builder().partitionValue(partitionKey).build()))
-                .queryConditional(QueryConditional.sortGreaterThanOrEqualTo(Key.builder().sortValue(sortKey).build()))
-                .build();
+        super(connectionFactory, mapper, d ->  mapper.map(d, Approved.class), TABLE_NAME);
     }
 
 
     @Override
-    public Mono<ApprovedCount> getCount() {
+    public Mono<Approved> getCount() {
         return this.getById(COUNTER_ID)
                 .switchIfEmpty(Mono.defer(this::initializeCounter)) // solo crea 1 vez
                 .doOnNext(count -> log.debug("Current count: {}", count.getCount()));
     }
 
-    private Mono<ApprovedCount> initializeCounter() {
-        ApprovedCount initialCount = ApprovedCount.builder()
+    private Mono<Approved> initializeCounter() {
+        Approved initialCount = Approved.builder()
                 .id(COUNTER_ID)
                 .count(0L)
                 .totalAmount(BigDecimal.ZERO)
@@ -65,7 +56,7 @@ public class ApprovedCountAdapter
     }
 
     @Override
-    public Mono<ApprovedCount> updateReport(BigDecimal amount) {
+    public Mono<Approved> updateReport(BigDecimal amount) {
         return this.getCount()
                 .flatMap(currentCount -> {
                     BigDecimal currentTotal = currentCount.getTotalAmount() != null
@@ -74,7 +65,7 @@ public class ApprovedCountAdapter
 
                     BigDecimal newAmount = amount != null ? amount : BigDecimal.ZERO;
 
-                    ApprovedCount newCount = ApprovedCount.builder()
+                    Approved newCount = Approved.builder()
                             .id(COUNTER_ID)
                             .count(currentCount.getCount() + 1)
                             .totalAmount(currentTotal.add(newAmount))
